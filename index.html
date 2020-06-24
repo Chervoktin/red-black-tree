@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <!-- подключаем стили Mocha, для отображения результатов -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.css">
+    <!-- подключаем библиотеку Mocha -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.1.0/mocha.js"></script>
+    <!-- настраиваем Mocha: предстоит BDD-тестирование -->
+    <script>
+        mocha.setup('bdd');
+    </script>
+
+    <!-- подключаем chai -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/2.0.0/chai.js"></script>
+
+
+    <!-- в chai есть много всего, выносим assert в глобальную область -->
+    <script src="redBlackTree.js"></script>
+    <script>
+        var assert = chai.assert;
+    </script>
+</head>
+
+<body>
+
+    <script>
+        describe("выполняет поворот", function () {
+            it("выполняет правый поворот", function () {
+                let rbt = new RedBlackTree();
+                for (let i = 20; i != 2; i--) {
+                    console.log(i);
+                    rbt.insert(i, i);
+                }
+                assert.equal(rbt._root.key, 13);
+
+            })
+
+            it("выполняет левый поворот", function () {
+                let rbt = new RedBlackTree();
+                for (let i = 1; i <= 20; i++) {
+                    rbt.insert(i, i);
+                }
+                assert.equal(rbt._root.key, 8);
+
+            });
+
+            it("выполняет оба поворота", function () {
+                let rbt = new RedBlackTree();
+                rbt.insert(100);
+                rbt.insert(1);
+                rbt.insert(99);
+                rbt.insert(2);
+                rbt.insert(98);
+                rbt.insert(3);
+                rbt.insert(97);
+                rbt.insert(4);
+                assert.equal(rbt._root.key, 97);
+            });
+            
+        });
+
+        describe("ищет родителя для вставки", function () {
+
+            it("ищет родителя при нулевом корне", function () {
+                let rbt = new RedBlackTree();
+                let element = rbt._findElement(1);
+                assert.equal(element, null);
+            });
+
+            it("ищет родителя", function () {
+                let rbt = new RedBlackTree();
+                let rc = {
+                    key: 3,
+                    value: 3,
+                    parent: parent,
+                    leftChild: null,
+                    rightChild: null,
+                    color: this.RED
+                }
+                lc = {
+                    key: 1,
+                    value: 1,
+                    parent: parent,
+                    leftChild: null,
+                    rightChild: null,
+                    color: this.RED
+                }
+                rbt._root = {
+                    key: 2,
+                    value: 2,
+                    parent: parent,
+                    leftChild: lc,
+                    rightChild: rc,
+                    color: this.RED
+                }
+                assert.equal(rbt._findElement(4).key, 3);
+
+                assert.equal(rbt._findElement(-1).key, 1);
+            });
+        });
+
+        describe("добавляет элемент в дерево", function () {
+
+            it("добавляет элемент в пустое дерево с к ключом ", function () {
+                let rbt = new RedBlackTree();
+                rbt.insert(1, 1);
+                assert.equal(rbt._root.key, 1);
+            });
+
+            it("добавляет элемент к черному родителю справа", function () {
+                let rbt = new RedBlackTree();
+                rbt.insert(1, 1);
+                rbt.insert(2, 2);
+                assert.equal(rbt._root.rightChild.key, 2);
+            });
+
+            it("добавляет элемент к черному родителю слева", function () {
+                let rbt = new RedBlackTree();
+                rbt.insert(2, 2);
+                rbt.insert(1, 1);
+                assert.equal(rbt._root.leftChild.key, 1);
+            });
+
+            it("добавляет элемент к красному родителю по левой стороне слева", function () {
+                let rbt = new RedBlackTree();
+                rbt.insert(5, 5);
+                rbt.insert(6, 6);
+                rbt.insert(4, 4);
+                rbt.insert(3, 3);
+                assert.equal(rbt._root.leftChild.leftChild.key, 3);
+            });
+            it("добавляет элемент к красному родителю по левой стороне справа", function () {
+                let rbt = new RedBlackTree();
+                rbt.insert(7, 7);
+                rbt.insert(8, 8);
+                rbt.insert(5, 5);
+                rbt.insert(6, 6);
+                assert.equal(rbt._root.leftChild.rightChild.key, 6);
+            });
+        });
+
+    </script>
+
+    <!-- в этом скрипте находятся спеки -->
+    <script src="test.js"></script>
+
+    <!-- в элементе с id="mocha" будут результаты тестов -->
+    <div id="mocha"></div>
+
+    <!-- запустить тесты! -->
+    <script>
+        mocha.run();
+    </script>
+</body>
+
+</html>
