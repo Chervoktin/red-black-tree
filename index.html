@@ -31,7 +31,6 @@
             it("выполняет правый поворот", function () {
                 let rbt = new RedBlackTree();
                 for (let i = 20; i != 2; i--) {
-                    console.log(i);
                     rbt.insert(i, i);
                 }
                 assert.equal(rbt._root.key, 13);
@@ -59,11 +58,21 @@
                 rbt.insert(4);
                 assert.equal(rbt._root.key, 97);
             });
-            
+
         });
 
         describe("ищет родителя для вставки", function () {
+            it("ищет элемент по ключу", function () {
+                let rbt = new RedBlackTree();
+                let count = 1000;
+                for (let i = 0; i <= count; i++) {
+                    rbt.insert(i, i);
+                }
+                for (let i = 0; i <= count; i++) {
+                    assert.equal(rbt.get(i).key, i);
+                }
 
+            });
             it("ищет родителя при нулевом корне", function () {
                 let rbt = new RedBlackTree();
                 let element = rbt._findElement(1);
