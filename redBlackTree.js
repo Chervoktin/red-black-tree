@@ -4,6 +4,7 @@ class RedBlackTree {
         this._root = null;
         this.BLACK = true;
         this.RED = false;
+        this.size = 0;
     }
     _findElement(key) {
         if (this._root === null) {
@@ -168,6 +169,25 @@ class RedBlackTree {
         if ((parrent !== null) && (parrent.color === this.RED)) {
             this._balancing(child);
         }
+        this.size += 1;
+    }
+
+    get(key) {
+        let current = this._root;
+        while (current.key !== key) {
+            if (key > current.key) {
+                current = current.rightChild;
+            } else {
+                current = current.leftChild;
+            }
+            if (current === null) {
+                break;
+            }
+        }
+        if (current !== null && current.key === key) {
+            return current;
+        }
+
     }
 }
 
