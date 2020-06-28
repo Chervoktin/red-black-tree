@@ -36,25 +36,49 @@ class RedBlackTree {
             return false;
         }
     }
+
+    _isCase1(element) {
+        let grandparent = element.parrent.parrent;
+        let leftChildIsRed = this._isRed(grandparent.leftChild)
+        let rightChildIsRed = this._isRed(grandparent.rightChild);
+        return leftChildIsRed && rightChildIsRed;
+    }
+
+    _isCase2(element) {
+        let grandparent = element.parrent.parrent;
+        let parrent = element.parrent;
+        let b1 = grandparent.leftChild === parrent;
+        let b2 = parrent.rightChild === element;
+        let b3 = grandparent.rightChild === parrent;
+        let b4 = parrent.leftChild === element;
+        let leftChildIsRed = this._isRed(grandparent.leftChild);
+        let rightChildIsRed = this._isRed(grandparent.rightChild);
+        let leftIsRedRightIsBlack = leftChildIsRed && !rightChildIsRed;
+        let leftIsBlackRightIsRed = !leftChildIsRed && rightChildIsRed;
+        let c2 = leftIsBlackRightIsRed || leftIsRedRightIsBlack;
+        let c1  =  ((b1 && b2) || (b3 && b4));
+        return c1 && c2;
+    }
+
+    _isCase3(element) {
+        let grandparent = element.parrent.parrent;
+        let leftChildIsRed = this._isRed(grandparent.leftChild);
+        let rightChildIsRed = this._isRed(grandparent.rightChild);
+        return leftChildIsRed || rightChildIsRed;
+    }
     _balancing(element) {
         if ((element.parrent !== this._root) && (element !== this._root)) {
-            let grandparent = element.parrent.parrent;
-            let parrent = element.parrent;
-            let isCase1 = (this._isRed(grandparent.leftChild)) && (this._isRed(grandparent.rightChild));
-            let b1 = grandparent.leftChild === parrent;
-            let b2 = parrent.rightChild === element;
-            let b3 = grandparent.rightChild === parrent;
-            let b4 = parrent.leftChild === element;
-            let isCase2 = (b1 && b2) || (b3 && b4);
-            let isCase3 = (this._isRed(grandparent.leftChild)) || (this._isRed(grandparent.rightChild));
+            
+            let isCase1 = this._isCase1(element);
+            let isCase2 = this._isCase2(element);
+            let isCase3 = this._isCase3(element);
+
             if (isCase1) {
                 this._case1(element);
+            } else if (isCase2) {
+                this._case2(element);
             } else if (isCase3) {
-                if (isCase2) {
-                    this._case2(element);
-                } else {
-                    this._case3(element);
-                }
+                this._case3(element);
             }
         }
     }
@@ -171,23 +195,17 @@ class RedBlackTree {
         }
         this.size += 1;
     }
-
+    
     get(key) {
         let current = this._root;
-        while (current.key !== key) {
+        while ((current.key !== key) && (current !== null )) {
             if (key > current.key) {
                 current = current.rightChild;
             } else {
                 current = current.leftChild;
             }
-            if (current === null) {
-                break;
-            }
         }
-        if (current !== null && current.key === key) {
-            return current;
-        }
-
+        return current;
     }
 }
 
