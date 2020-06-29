@@ -61,7 +61,91 @@
 
         });
 
-        describe("ищет родителя для вставки", function () {
+        describe("Поиск элементов", function () {
+
+            it("удаляет элемент 6", function () {
+                let rbt = new RedBlackTree();
+                rbt._root = {
+                    key: 13,
+                    value: 13,
+                    parrent: null,
+                    leftChild: null,
+                    rightChild: null,
+                    color: rbt.BLACK
+                };
+
+                rbt._root.rightChild = {
+                    key: 17,
+                    value: 17,
+                    parrent: rbt._root,
+                    leftChild: null,
+                    rightChild: null,
+                    color: rbt.RED
+                }
+
+                rbt._root.leftChild = {
+                    key: 8,
+                    value: 8,
+                    parrent: rbt._root,
+                    leftChild: null,
+                    rightChild: null,
+                    color: rbt.RED
+                }
+
+                rbt._root.leftChild.leftChild = {
+                    key: 1,
+                    value: 1,
+                    parrent: rbt._root.leftChild,
+                    leftChild: null,
+                    rightChild: null,
+                    color: rbt.BLACK
+                }
+
+                rbt._root.leftChild.leftChild.rightChild = {
+                    key: 6,
+                    value: 6,
+                    parrent: rbt._root.leftChild.leftChild,
+                    leftChild: null,
+                    rightChild: null,
+                    color: rbt.RED
+                }
+                
+
+                rbt._root.leftChild.rightChild = {
+                    key: 11,
+                    value: 11,
+                    parrent: rbt._root.leftChild,
+                    leftChild: null,
+                    rightChild: null,
+                    color: rbt.BLACK
+                }
+
+
+
+                rbt._root.rightChild.rightChild = {
+                    key: 25,
+                    value: 25,
+                    parrent: rbt._root.rightChild,
+                    leftChild: null,
+                    rightChild: null,
+                    color: rbt.BLACK
+                }
+                
+                rbt._root.rightChild.leftChild = {
+                    key: 15,
+                    value: 15,
+                    parrent: rbt._root.rightChild,
+                    leftChild: null,
+                    rightChild: null,
+                    color: rbt.BLACK
+                }
+        
+                rbt.delete(6)
+                assert.equal(rbt._root.leftChild.leftChild.key,1 );
+                assert.equal(rbt._root.leftChild.leftChild.color,rbt.BLACK );
+                assert.equal(rbt._root.leftChild.leftChild.rightChild, null );
+
+            });
             it("ищет элемент по ключу", function () {
                 let rbt = new RedBlackTree();
                 let count = 1000;
