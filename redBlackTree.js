@@ -6,13 +6,17 @@ class RedBlackTree {
         this.RED = false;
         this.size = 0;
     }
-    _findElement(key) {
+    _findElement(key, start) {
+        if (start === undefined) {
+            start = this._root;
+        }
         if (this._root === null) {
             return null;
         }
-        let current = this._root;
+
+        let current = start;
         while (true) {
-            if (key > current.key) {
+            if (key >= current.key) {
                 if (current.rightChild === null) {
                     break;
                 } else {
@@ -27,6 +31,67 @@ class RedBlackTree {
             }
         }
         return current;
+    }
+
+    _hasTwoNullChildren(element) {
+        return (element.rightChild === null) && (element.leftChild === null);
+    }
+
+    _hasOneNullChild(element) {
+        return (element.rightChild === null) && (element.leftChild !== null) ||
+            (element.rightChild !== null) && (element.leftChild !== null);
+    }
+
+    _isRightChild(element) {
+        return element.parrent.rightChild === element;
+    }
+
+    _findElementForReplace(key) {
+        let startElement = this.get(key);
+        if (startElement !== null) {
+            return this._findElement(key);
+        } else {
+            return null;
+        }
+    }
+
+    _isRedOrNull(element) {
+        return (element === null) || (element.color === this.RED);
+    }
+
+    _setNull(element) {
+        if (this._isRightChild(element)) {
+            element.parrent.rightChild = null;
+        } else {
+            element.parrent.leftChild = null;
+        }
+    }
+
+    delete(key) {
+        let element = this.get(key);
+
+        let replacement;
+        let hasTwoNullChildren = this._hasTwoNullChildren(element);
+        let hasOneNullChild = this._hasOneNullChild(element);
+        if (hasTwoNullChildren || hasOneNullChild) {
+            replacement = null;
+        }
+
+        if (this._hasOneNullChild(element)) {
+            replacement = this._findElement(key, element);
+        }
+
+        //-------------------------------------------------------
+
+        if ((element.color === this.RED) && (this._isRedOrNull(replacement))) {
+            this._setNull(element);
+        }
+
+        if ((element.color === this.BLACK) && (this._isRed(replacement))) {
+            replacement.BLACK;
+            replacement.grandparent = element.grandparent;
+            element = replacement;
+        }
     }
 
     _isRed(element) {
@@ -56,7 +121,7 @@ class RedBlackTree {
         let leftIsRedRightIsBlack = leftChildIsRed && !rightChildIsRed;
         let leftIsBlackRightIsRed = !leftChildIsRed && rightChildIsRed;
         let c2 = leftIsBlackRightIsRed || leftIsRedRightIsBlack;
-        let c1  =  ((b1 && b2) || (b3 && b4));
+        let c1 = ((b1 && b2) || (b3 && b4));
         return c1 && c2;
     }
 
@@ -68,7 +133,7 @@ class RedBlackTree {
     }
     _balancing(element) {
         if ((element.parrent !== this._root) && (element !== this._root)) {
-            
+
             let isCase1 = this._isCase1(element);
             let isCase2 = this._isCase2(element);
             let isCase3 = this._isCase3(element);
@@ -195,10 +260,10 @@ class RedBlackTree {
         }
         this.size += 1;
     }
-    
+
     get(key) {
         let current = this._root;
-        while ((current.key !== key) && (current !== null )) {
+        while ((current.key !== key) && (current !== null)) {
             if (key > current.key) {
                 current = current.rightChild;
             } else {
