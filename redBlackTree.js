@@ -39,7 +39,7 @@ class RedBlackTree {
 
     _hasOneNullChild(element) {
         return (element.rightChild === null) && (element.leftChild !== null) ||
-            (element.rightChild !== null) && (element.leftChild !== null);
+            (element.rightChild !== null) && (element.leftChild == null);
     }
 
     _isRightChild(element) {
@@ -67,6 +67,13 @@ class RedBlackTree {
         }
     }
 
+    _replace(element, replacement){
+        element.key = replacement.key;
+        element.color = replacement.color;
+        element.rightChild = replacement.rightChild;
+        element.leftChild = replacement.leftChild;
+    }
+
     delete(key) {
         let element = this.get(key);
 
@@ -88,9 +95,9 @@ class RedBlackTree {
         }
 
         if ((element.color === this.BLACK) && (this._isRed(replacement))) {
-            replacement.BLACK;
-            replacement.grandparent = element.grandparent;
-            element = replacement;
+            replacement.color = this.BLACK;
+            replacement.parrent = element.parrent; 
+            this._replace(element,replacement);
         }
     }
 
