@@ -67,38 +67,40 @@ class RedBlackTree {
         }
     }
 
-    _replace(element, replacement){
-        element.key = replacement.key;
-        element.color = replacement.color;
-        element.rightChild = replacement.rightChild;
-        element.leftChild = replacement.leftChild;
+    _replace(element, replacement) {
+        if (replacement === null) {
+            this._setNull(element);
+        } else {
+            element.key = replacement.key;
+            element.rightChild = replacement.rightChild;
+            element.leftChild = replacement.leftChild;
+            this._setNull(replacement);
+        }
+    }
+
+    _getNotNullChild(element) {
+        if (element.rightChild !== null) {
+            return element.rightChild;
+        } else {
+            return element.leftChild;
+        }
     }
 
     delete(key) {
         let element = this.get(key);
 
         let replacement;
-        let hasTwoNullChildren = this._hasTwoNullChildren(element);
-        let hasOneNullChild = this._hasOneNullChild(element);
-        if (hasTwoNullChildren || hasOneNullChild) {
+
+        if (this._hasTwoNullChildren(element)) {
             replacement = null;
         }
-
-        if (this._hasOneNullChild(element)) {
+        else if (this._hasOneNullChild(element)) {
+            replacement = this._getNotNullChild(element);
+        } else {
             replacement = this._findElement(key, element);
         }
 
-        //-------------------------------------------------------
-
-        if ((element.color === this.RED) && (this._isRedOrNull(replacement))) {
-            this._setNull(element);
-        }
-
-        if ((element.color === this.BLACK) && (this._isRed(replacement))) {
-            replacement.color = this.BLACK;
-            replacement.parrent = element.parrent; 
-            this._replace(element,replacement);
-        }
+        this._replace(element, replacement);
     }
 
     _isRed(element) {
