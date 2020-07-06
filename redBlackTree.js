@@ -61,7 +61,11 @@ class RedBlackTree {
 
     _setNull(element) {
         if (this._isRightChild(element)) {
-            element.parrent.rightChild = null;
+            if (element.rightChild === null) {
+                element.parrent.rightChild = null;
+            } else {
+                element.parrent.rightChild = element.rightChild;
+            }
         } else {
             element.parrent.leftChild = null;
         }
@@ -72,8 +76,6 @@ class RedBlackTree {
             this._setNull(element);
         } else {
             element.key = replacement.key;
-            element.rightChild = replacement.rightChild;
-            element.leftChild = replacement.leftChild;
             this._setNull(replacement);
         }
     }
@@ -84,6 +86,32 @@ class RedBlackTree {
         } else {
             return element.leftChild;
         }
+    }
+
+    _colorBlack(element) {
+        if (element !== null) {
+            element.color = this.BLACK;
+        }
+    }
+
+    _getColor(element) {
+        if (element === null) {
+            return this.BLACK;
+        } else {
+            return element.color;
+        }
+    }
+
+    _isCase2Delete(element) {
+        let bothChildIsBlack = (this._getColor(element.rightChild) === this.BLACK) &&
+            (this._getColor(element.leftChild) === this.BLACK);
+        let w = element.leftChild;
+        if (w === null) {
+            return false;
+        }
+        let wIsBlack = this._getColor(w) === this.BLACK;
+        let bothChildOfWisBlack = this._getColor(w.leftChild) && this._getColor(w.rightChild);
+        return bothChildIsBlack && wIsBlack && bothChildOfWisBlack;
     }
 
     delete(key) {
@@ -101,6 +129,17 @@ class RedBlackTree {
         }
 
         this._replace(element, replacement);
+
+        //CASE0
+
+        if (this._isRed(element.rightChild)) {
+            this._colorBlack(element.rightChild);
+        } else if (this._isCase2Delete(element)) {
+            element.leftChild.color = this.RED;
+            element.color = this.BLACK;
+        }
+
+
     }
 
     _isRed(element) {
