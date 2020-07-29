@@ -424,9 +424,9 @@
                     rightChild: null,
                     color: rbt.BLACK
                 }
-               
+
                 rbt.delete(25)
-                
+
                 assert.equal(rbt._root.rightChild.rightChild.key, 27);
                 assert.equal(rbt._root.rightChild.rightChild.color, rbt.BLACK);
                 assert.equal(rbt._root.rightChild.rightChild.rightChild, null);
@@ -462,7 +462,7 @@
                     color: rbt.BLACK
                 }
 
-                
+
                 rbt._root.rightChild.leftChild = {
                     key: 10,
                     value: 10,
@@ -481,16 +481,69 @@
                     color: rbt.RED
                 }
 
+
               
-                debugger;
                 rbt.delete(18)
-                
+
                 assert.equal(rbt._root.rightChild.key, 22);
                 assert.equal(rbt._root.rightChild.color, rbt.RED);
 
                 assert.equal(rbt._root.rightChild.rightChild.key, 26);
                 assert.equal(rbt._root.rightChild.rightChild.color, rbt.BLACK);
+
+
+            });
+
+            it("удаляет элемент 2", function () {
+                let rbt = new RedBlackTree();
+                rbt._root = {
+                    key: 5,
+                    value: 5,
+                    parrent: null,
+                    leftChild: null,
+                    rightChild: null,
+                    color: rbt.BLACK
+                };
+
+                rbt._root.leftChild = {
+                    key: 2,
+                    value: 2,
+                    parrent: rbt._root,
+                    leftChild: null,
+                    rightChild: null,
+                    color: rbt.RED
+                }
+
+                rbt._root.leftChild.leftChild = {
+                    key: 1,
+                    value: 1,
+                    parrent: rbt._root.leftChild,
+                    leftChild: null,
+                    rightChild: null,
+                    color: rbt.BLACK
+                }
+                rbt._root.leftChild.rightChild = {
+                    key: 4,
+                    value: 4,
+                    parrent: rbt._root.leftChild,
+                    leftChild: null,
+                    rightChild: null,
+                    color: rbt.BLACK
+                }
+
+
+
+
+
                
+                rbt.delete(2)
+
+                assert.equal(rbt._root.leftChild.key, 4);
+                assert.equal(rbt._root.leftChild.color, rbt.BLACK);
+
+                assert.equal(rbt._root.leftChild.leftChild.key, 1);
+                assert.equal(rbt._root.leftChild.leftChild.color, rbt.RED);
+
 
             });
             it("ищет элемент по ключу", function () {
