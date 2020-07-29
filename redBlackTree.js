@@ -104,6 +104,10 @@ class RedBlackTree {
     }
 
     _isCase2Delete(element) {
+
+        if(element === null){
+            return false;
+        }
         let bothChildIsBlack = (this._getColor(element.rightChild) === this.BLACK) &&
             (this._getColor(element.leftChild) === this.BLACK);
         let w = element.leftChild;
@@ -120,6 +124,7 @@ class RedBlackTree {
 
         let replacement;
         let x = null;
+        let xparrent = null;
         if (this._hasTwoNullChildren(element)) {
             replacement = null;
         }
@@ -128,6 +133,10 @@ class RedBlackTree {
         } else {
             replacement = this._findElement(key, element);
             x = replacement.rightChild;
+        }
+
+        if(x === null){
+            x = {color: this.BLACK, parrent:replacement};
         }
 
         if (this._isRed(element) && (this._isRed(replacement) || (replacement == null))) {
@@ -141,10 +150,25 @@ class RedBlackTree {
         this._replace(element, replacement);
 
         //case 0
-
+                
+    debugger;
         if (this._isRed(x)) {
             x.color = this.BLACK;
-        }
+        } else
+            if (this._isCase2Delete(x)) {
+                debugger;
+                let w;
+                if (xparrent.rightChild !== null) {
+                    w = xparrent.rightChild;
+                } else {
+                    w = xparrent.leftChild;
+                }
+                w.color = this.RED;
+                x = xparrent;
+                if (this._isRed(x)) {
+                    x.color = this.BLACK;
+                }
+            }
 
 
 
