@@ -76,6 +76,7 @@ class RedBlackTree {
             this._setNull(element);
         } else {
             element.key = replacement.key;
+            element.color = replacement.color;
             this._setNull(replacement);
         }
     }
@@ -118,7 +119,7 @@ class RedBlackTree {
         let element = this.get(key);
 
         let replacement;
-
+        let x = null;
         if (this._hasTwoNullChildren(element)) {
             replacement = null;
         }
@@ -126,18 +127,28 @@ class RedBlackTree {
             replacement = this._getNotNullChild(element);
         } else {
             replacement = this._findElement(key, element);
+            x = replacement.rightChild;
         }
 
+        if (this._isRed(element) && (this._isRed(replacement) || (replacement == null))) {
+
+        } else
+            if (this._isRed(element) && (!this._isRed(replacement))) {
+                replacement.color = this.RED;
+            } else if (!this._isRed(element) && (this._isRed(replacement))) {
+                replacement.color = this.BLACK;
+            }
         this._replace(element, replacement);
 
-        //CASE0
+        //case 0
 
-        if (this._isRed(element.rightChild)) {
-            this._colorBlack(element.rightChild);
-        } else if (this._isCase2Delete(element)) {
-            element.leftChild.color = this.RED;
-            element.color = this.BLACK;
+        if (this._isRed(x)) {
+            x.color = this.BLACK;
         }
+
+
+
+
 
 
     }
